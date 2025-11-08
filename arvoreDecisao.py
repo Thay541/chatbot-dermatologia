@@ -5,7 +5,7 @@
 ARVORE_DECISAO = {
     # Pergunta 1 — SINAIS CLÍNICOS
     "caracteristica": "tipo_lesao_inicial",
-    "pergunta": ("1) Quais os sinais clínicos da lesão observada no paciente?\n(Exemplo: placas eritematosas, vesículas, pápulas, máculas, úlceras, crostas, erupção eritemato-descamativa, nódulo etc.)"),
+    "pergunta": ("1) Quais os sinais clínicos da lesão observada no paciente?\n(Exemplo: placas eritematosas, vesículas, pápulas, máculas, úlceras, crostas, nódulo etc.)"),
     "ramos": {
         
         # RAMO A — PLACAS ERITEMATOSAS
