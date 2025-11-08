@@ -7,15 +7,10 @@ Professora: Cristina Bicharra
 Grupo: Carolina Lutterbach, Felipe Amaro e Thaís Deluca
 
 1. Introdução
-O DermaBot é um chatbot voltado para o reconhecimento e orientação inicial das principais doenças dermatológicas. O sistema foi desenvolvido em Python, utilizando Flask como servidor web local, alternativa à interrupção do serviço da Twilio a números brasileiros.
-O sistema integra três componentes principais:
-Árvore de decisão manual (arvoreDecisao.py): modela o raciocínio clínico de diagnóstico com base em sintomas, sinais e localização.
-
-
-Motor de navegação (motorArvore.py) — percorre a árvore conforme as respostas do usuário e determina o próximo nó (pergunta) ou folha (diagnóstico).
-
-
-Interface local (appDermaBotArvore.py) — fornece a interação textual no navegador (perguntas, respostas e resultados).
+O DermaBot é um chatbot voltado para o reconhecimento e orientação inicial das principais doenças dermatológicas. O sistema foi desenvolvido em Python e integra três componentes principais:
+- Árvore de decisão manual (arvoreDecisao.py): modela o raciocínio clínico de diagnóstico com base em sintomas, sinais e localização.
+- Motor de navegação (motorArvore.py) — percorre a árvore conforme as respostas do usuário e determina o próximo nó (pergunta) ou folha (diagnóstico).
+- Interface local (appDermaBotArvore.py) — fornece a interação textual no navegador (perguntas, respostas e resultados).
 A proposta dessa versão é substituir o motor baseado em MYCIN (CNF e fatores de certeza) por uma estrutura determinística, transparente e explicável, baseada em árvore de decisão.
 
 2. Arquitetura do Sistema
@@ -24,7 +19,7 @@ DermaBot/
 appDermaBotArvore.py     # Interface Flask local
 motorArvore.py           # Motor de decisão e heurística contextual
 arvoreDecisao.py         # Base de conhecimento (árvore manual)
-O usuário interage via navegador local (ex.: http://127.0.0.1:5000).
+O usuário interage via navegador.
 O Flask envia e recebe mensagens assíncronas (JavaScript/JSON).
 O motor de decisão processa cada resposta, atualiza o estado e seleciona a próxima pergunta.
 Quando atinge uma folha, o sistema exibe o diagnóstico sugerido, a justificativa clínica e as orientações básicas.
