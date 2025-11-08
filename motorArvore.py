@@ -82,6 +82,12 @@ SINONIMOS = {
     "mmii": {"perna","pernas","mmii","panturrilha","tornozelo"},
 }
 
+SEX_MASC = {"masculino","masc","homem","m","m.", "homens"}
+SEX_FEM  = {"feminino","fem","mulher","f","f.", "mulheres"}
+
+IDADE_CRIANCA = {"crianca","criança","infantil","pediatrico","pediátrico","menino","menina"}
+IDADE_ADULTO = {"adulto","adulta","adultos","adolescentes","adolescente","jovem","idoso","idosa","senil","terceira","idade"}
+
 NEGACAO = {"nao","n","nem","sem","ausencia","negativo","negativa","nunca","nenhum","nenhuma", "nada disso"}
 AFIRMACAO = {"sim","s","claro","ok","yes","y","positivo","positiva","bora","comecar","começar"}
 
@@ -128,6 +134,42 @@ OPCOES: Dict[str, Dict[str, Set[str]]] = {
         "A_face_couro": {"face","couro","cabeludo","orelha","orelhas"},
         "A_local_contato": {"contato","luva","detergente","produto","quimico","químico","irritante","alergeno","alérgeno"},
     },
+
+    # sexo na farmacodermia (ramo A)
+    "sexo_farmaco": {
+        "A_masc": SEX_MASC,
+        "A_fem":  SEX_FEM,
+    },
+
+    # idade na seborreica (ramo A)
+    "idade_dermato_seborreica": {
+        "A_crianca":             IDADE_CRIANCA,
+        "A_adolescente_adulto":  IDADE_ADULTO,
+    },
+
+    # nó “pústulas + idade” (ramo B)
+    # dica: como o classificador soma “acertos”, mencionar “pústulas” e “criança”
+    # favorece a chave B_crianca_pustulas.
+    "vesicula_pustula_crianca_adulto": {
+        "B_crianca_pustulas": {"pustula","pústula","pustulas","pústulas"} | IDADE_CRIANCA,
+        "B_adulto_sem_pustulas": IDADE_ADULTO,
+    },
+
+    # idade/sexo na eritrodermia (ramo G)
+    "idade_esfoliativa": {
+        "G_adulto_idoso": IDADE_ADULTO,
+    },
+    "sexo_esfoliativa": {
+        "G_masc": SEX_MASC,
+        "G_fem":  SEX_FEM,
+    },
+
+    # sexo no CBC (ramo H)
+    "sexo_cbc": {
+        "H_masc": SEX_MASC,
+        "H_fem":  SEX_FEM,
+    },
+
 
     # RAMO B
     "vesiculas_local_hsv": { "1": SINONIMOS["genitais_labios"] },
