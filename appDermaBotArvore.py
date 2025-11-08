@@ -9,7 +9,27 @@ aplicativo = Flask(__name__)
 aplicativo.secret_key = "dermabot-desenvolvimento-arvore"
 
 # Estado em memória por usuário (chaveado por id na sessão Flask)
-sessoes_usuarios = {}
+# sessoes_usuarios = {}
+
+aplicativo.config.update(
+    SESSION_COOKIE_SECURE=True,      # só envia em HTTPS (Render é https)
+    SESSION_COOKIE_SAMESITE="Lax" 
+)
+
+def _estado_padrao():
+    return {"etapa": "arvore", "respostas": {}, "pergunta_atual": None, "texto_pergunta_atual": None,
+            "mostrou_inicio": False, "no_menu": True}
+
+def obter_estado():
+    est = sessao.get("estado")
+    if not est:
+        est = _estado_padrao()
+        sessao["estado"] = est
+    return est
+
+def salvar_estado(est):
+    sessao["estado"] = est
+
 
 HTML_PAGINA_INICIAL = """
 <!doctype html>
@@ -126,7 +146,8 @@ def perguntar_proximo_no(estado):
     if "perguntar" in resultado:
         pergunta = resultado["perguntar"]["texto"]
         estado["pergunta_atual"] = resultado["perguntar"]["caracteristica"]
-        estado["texto_pergunta_atual"] = pergunta   # <-- ADICIONE ESTA LINHA
+        estado["texto_pergunta_atual"] = pergunta
+        salvar_estado(estado)
         return pergunta, False
 
     if "folha" in resultado:
@@ -169,12 +190,14 @@ def conversar():
     mensagem_recebida = (corpo.get("mensagem") or "").strip().lower()
 
     # Recupera/cria estado de sessão específico do usuário
-    estado = sessoes_usuarios.get(id_usuario)
+    # estado = sessoes_usuarios.get(id_usuario)
+    estado = obter_estado()
     if not estado:
         estado = reiniciar_sessao()
         estado["mostrou_inicio"] = False
         estado["no_menu"] = True
-        sessoes_usuarios[id_usuario] = estado
+        #sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
 
     respostas_usuario = []
 
@@ -182,7 +205,8 @@ def conversar():
     if mensagem_recebida == "__bootstrap__":
         estado["mostrou_inicio"] = True
         estado["no_menu"] = True
-        sessoes_usuarios[id_usuario] = estado
+        # sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
         respostas_usuario.append(mensagem_boas_vindas())
         return jsonify({"respostas_usuario": respostas_usuario})
 
@@ -190,7 +214,8 @@ def conversar():
     if not estado.get("mostrou_inicio", False):
         estado["mostrou_inicio"] = True
         estado["no_menu"] = True
-        sessoes_usuarios[id_usuario] = estado
+        # sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
         respostas_usuario.append(mensagem_boas_vindas())
         return jsonify({"respostas_usuario": respostas_usuario})
 
@@ -201,7 +226,8 @@ def conversar():
             estado = reiniciar_sessao()
             estado["mostrou_inicio"] = True
             estado["no_menu"] = False
-            sessoes_usuarios[id_usuario] = estado
+            # sessoes_usuarios[id_usuario] = estado
+            salvar_estado(estado)
             texto, terminou = perguntar_proximo_no(estado)
             respostas_usuario.append(texto)
             return jsonify({"respostas_usuario": respostas_usuario})
@@ -211,7 +237,8 @@ def conversar():
             # Mantém no menu para poder reabrir com nova mensagem
             estado["pergunta_atual"] = None
             estado["no_menu"] = True
-            sessoes_usuarios[id_usuario] = estado
+            # sessoes_usuarios[id_usuario] = estado
+            salvar_estado(estado)
             return jsonify({"respostas_usuario": respostas_usuario})
 
         # Entrada inválida no menu
@@ -223,14 +250,16 @@ def conversar():
         estado = reiniciar_sessao()
         estado["mostrou_inicio"] = True
         estado["no_menu"] = False
-        sessoes_usuarios[id_usuario] = estado
+        # sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
         texto, terminou = perguntar_proximo_no(estado)
         respostas_usuario.append(texto)
         return jsonify({"respostas_usuario": respostas_usuario})
 
     if estado.get("pergunta_atual"):
         registrar_resposta(estado, mensagem_recebida)
-        sessoes_usuarios[id_usuario] = estado
+        # sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
 
     # Avançar na árvore
     texto, terminou = perguntar_proximo_no(estado)
@@ -241,10 +270,16 @@ def conversar():
         estado = reiniciar_sessao()
         estado["mostrou_inicio"] = True
         estado["no_menu"] = True
-        sessoes_usuarios[id_usuario] = estado
+        # sessoes_usuarios[id_usuario] = estado
+        salvar_estado(estado)
 
     return jsonify({"respostas_usuario": respostas_usuario})
 
 
+#if __name__ == "__main__":
+    #aplicativo.run(port=5000, debug=True)
+
 if __name__ == "__main__":
-    aplicativo.run(port=5000, debug=True)
+    # Execução local (dev)
+    aplicativo.run(host="0.0.0.0", port=5000, debug=False)
+
