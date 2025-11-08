@@ -76,11 +76,24 @@ SINONIMOS = {
     "maos_pes": {"mao","maos","pe","pes","palma","planta","plantar","dedo"},
     "extensoras": {"cotovelo","cotovelos","joelho","joelhos"},
     "face_cc": {"face","rosto","bochecha","nariz","testa","sobrancelha","couro","cabeludo"},
-    "dobras": {"axila","axilas","virilha","inframamaria","submamaria","pregas"},
+    "dobras": {"axila","axilas","virilha","inframamaria","submamaria","pregas", "dobras"},
     "fotoexpostas": {"sol","foto","uv","raios","face","orelha","pescoco"},
     "genitais_labios": {"labio","labios","genital","genitais","penis","vagina","vulva"},
     "mmii": {"perna","pernas","mmii","panturrilha","tornozelo"},
+    "unhas": {"unha","unhas","onic","onico","oníco"},
+    "tronco":{"tronco","dorso","costas","peito","torax","tórax","abdomen","barriga","flanco"}
+
 }
+
+# Locais anatômicos úteis para micose
+LOC_PES   = {"pe","pé","pes","pés","planta","plantar","calcanhar","dedo","dedos"}
+LOC_UNHAS = {"unha","unhas","ungh","onico","oníc","onicocriptose","onicomicose"}
+LOC_SCALP = {"couro","cabeludo","scalp","courocabeludo","cabeca","cabeça"}
+LOC_TRONC = {"tronco","dorso","costas","peito","torax","tórax","abdomen","barriga","flanco"}
+LOC_DOBRA = {"dobra","dobras","pregas","axila","axilas","virilha","ingle","inguinal",
+             "submamaria","inframamaria","intertrigo","sulco"}
+
+LOC_MICOSIS_ANY = LOC_PES | LOC_UNHAS | LOC_SCALP | LOC_TRONC | LOC_DOBRA
 
 SEX_MASC = {"masculino","masc","homem","m","m.", "homens"}
 SEX_FEM  = {"feminino","fem","mulher","f","f.", "mulheres"}
@@ -119,7 +132,7 @@ OPCOES: Dict[str, Dict[str, Set[str]]] = {
         "A_eritema_sem_descamacao": {"eritema","eritematoso","vermelhidao","rubor"} - SINONIMOS["descamacao"],
     },
     "placas_local_micose": {
-        "A_micose_local": SINONIMOS["maos_pes"] | SINONIMOS["dobras"] | {"unha","unhas","tronco","couro","cabeludo","pe","pes","tinea"}
+        "A_micose_local": (SINONIMOS["maos_pes"] | SINONIMOS["dobras"] | {"unha","unhas","tronco","couro","cabeludo","pe","pes","tinea","tínea"} | LOC_MICOSIS_ANY)
     },
     "placas_local_bem_definidas": {
         "A_extensoras_cc": SINONIMOS["extensoras"] | {"couro","cabeludo"},
@@ -221,7 +234,19 @@ def _classificar_opcao(caracteristica: str, tokens: Set[str]) -> str:
         pontuacao[chave] = hits
     # escolhe a chave com maior score (> 0)
     chave, melhor = max(pontuacao.items(), key=lambda kv: kv[1])
-    return chave if melhor > 0 else ""
+    
+    if melhor > 0:
+        return chave
+
+    # Fallback para nós com APENAS UM ramo: se houver qualquer pista anatômica genérica, aceite.
+    if len(mapa) == 1:
+        # quando for 'placas_local_micose', seja mais permissivo
+        if "placas_local_micose" in mapa or True:
+            # tokens já estão normalizados/lematizados
+            if any(t in { _lematizacao(_normalizacao(x)) for x in LOC_MICOSIS_ANY } for t in tokens):
+                return list(mapa.keys())[0]
+
+    return ""
 
 
 _STOP_WORDS = {"a","o","os","as","um","uma","de","do","da","dos","das","no","na","nos","nas","em","para","por","com","sem","e","ou","que","se","sao","sera","ha","tem","houve"}
