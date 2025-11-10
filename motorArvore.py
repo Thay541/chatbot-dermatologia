@@ -42,7 +42,7 @@ def _distancia_levenshtein(a: str, b: str) -> int:
             prev, dp[j] = dp[j], cur
     return dp[-1]
 
-def _match(tokens: Set[str], candidatos: Iterable[str], max_lev: int = 1) -> bool:
+def _correspondencia(tokens: Set[str], candidatos: Iterable[str], max_lev: int = 1) -> bool:
     for cand in candidatos:
         c = _lematizacao(_normalizacao(cand))
         if c in tokens: return True
@@ -52,6 +52,7 @@ def _match(tokens: Set[str], candidatos: Iterable[str], max_lev: int = 1) -> boo
 
 
 SINONIMOS = {
+<<<<<<< Updated upstream
     # eixos gerais
     "vesicular": {"vesicula","vesicular","bolha","bolhas","pustula","pustulas"},
     "placa": {"placa","placas","placoide","placoides"},
@@ -92,9 +93,89 @@ LOC_SCALP = {"couro","cabeludo","scalp","courocabeludo","cabeca","cabeça"}
 LOC_TRONC = {"tronco","dorso","costas","peito","torax","tórax","abdomen","barriga","flanco"}
 LOC_DOBRA = {"dobra","dobras","pregas","axila","axilas","virilha","ingle","inguinal",
              "submamaria","inframamaria","intertrigo","sulco"}
+=======
+    # PLACA
+    "placa": {"placa","placas","placoide","placoides", "palca","palcas"},
+    "circinada": {"circinada", "circinadas", "anel", "anelar", "circular", "redonda", "arredondada"},
+    "liquenificada": {"liquenificada","liquenificadas","espessa","espessas","espessadas"},
+    "eritemato": {"eritemato", "eritematosa", "eritematoso"},
+    "descamativa": {"descamativa","descamativas","descamacao","descamar","escama","escamosa","escamosas","escamoso","escamosos","escamosa"},
+    "bem_definida": {"bem","definida","delimitada","delimitadas","bemdelimitada","bem-delimitada", "bem definida", "definidas"},
+    "placa_mae": {"placa-mae","placa_mae","herald","oval", "mae"},
+    "erupcao": {"erupção", "erupçao", "erupcao", "erupcão", "erupções","erupcoes","erpçoes","erupcões","secundária","secundaria","secundárias","secundarias","em tronco"},
+
+    # LESÃO
+    "lesao": {"lesao", "lesão", "lesões", "lesoes","eritemato-descamativa", "eritemato","descamativa"},
+    "caracteristica_lesao_seca": {"seca","secas","esfoliativa","esfoliativas","ressecada","ressecadas","ressecado","ressecados"},
+    "caracteristica_lesao_alvo": {"alvo","vesículas","vesiculas","vesícula","vesicula","bolha","bolhas"},
+    "local_lesao_disseminada": {"disseminada","disseminadas","disseminado","disseminados","generalizada","generalizadas","generalizado","generalizados","corpo","lugar","espalhada","todo","lugares","todos"},
+
+    # VESÍCULA
+    "vesicula": {"vesicula","vesículas","vesicular","bolha","bolhas","ampola","pústula","pustula","vesico","flictena","vesícula"},
+    "vesicula_disseminada": {"disseminada","disseminadas","disseminado","disseminados","generalizada","generalizadas","generalizado","generalizados","corpo","lugar","espalhada","todo","lugares","todos"},
+    "sintomas_sistemicos": {"febre","febril","mal-estar","indisposicao","cansaco","fadiga","astenia",
+                            "cabeça","cefaleia","cefaleia","apetite","anorexia",
+                            "malestar","mauestar"},
+    "ardor": {"ardor","queima","queimacao","queimação","dolorido","dor","ardente"},
+    "crianca": {"crianca","criança","pediatrico","pediátrico","menino","menina"},
+    "adulto": {"adulto","adulta","maior de idade"},
+    "exantema_disseminado": {"manchas","manchas avermelhadas","exantema","corpo todo","pelo corpo","generalizado","difuso"},
+    "genitais": {"genital","genitais","pênis","penis","vulva","vagina","escroto","perianal","pubiana"},
+    "boca": {"boca","labio","lábio","lábios","labios","oral","cavidade oral","intraoral"},
+    "catapora_ou_imunossup": {
+        "catapora","varicela","já teve varicela","teve catapora","imunossuprimido","imunossupressa",
+        "imunossupressao","quimioterapia","quimioterápico","corticoide","corticosteroide","hiv","transplante"
+    },
+    
+    # sintomas
+    "prurido": {"prurido","coceira","comichao","pruriginoso","pruriginosa", "coça", "coca", "coçando", "cocando"},
+    "sintoma_dermatite_contato": {"ardor","ador","queimação","queimaçao","queimacão","queima","arde","ardência","ardido","ardia"},
+    
+    # histórico placas
+    "umidade": {"umido","umida","umidade","suor","suorento","suado"},
+    "oclusao": {"sapato","tenis","bota","fechado","apertada","apertado","meia","roupa"},
+    "diabetes": {"diabete","diabetes","glicemia","glicemico","glicêmico"},
+    "viral": {"virose","resfriado","grip","infec","vias"},
+    "estresse": {"estresse","stress","ansiedade","ansioso","ansiosa"},
+    "atopia": {"atopia","atopico","atopica","atópico","atópica"},
+    "dermatite": {"dermatite","eczema"},
+    "picada": {"picada","picadas","inseto","mosquito","pulga"},
+
+    # histórico dermatite
+    "historico_dermatite_seborreica": {"estresse","stress","stres","hiv","aids","familiar","família","familia","genético","genetico","genética","genetica"},
+    "historico_dermatite_contato": {"produto","produtos","irritante","irritantes","agente","agentes","perfume","perfumes","detergente","detergentes","cosméticos","cosmético","cosmetico","cosméticos","maquiagem"},
+    "historico_dermatite_atopica": {"atopia","asma","rinite","bronquite"},
+
+
+    # tipo pele dermatite
+    "pele_oleosa": {"oleosa","oleoso","sebosa","seboso","oleosas","oleosos","sebo"},
+    "pele_seca": {"seca","ressecada","seco","ressecado","ressecadas","ressecados"},
+    
+    # locais
+    "pes": {"pe","pes","pé","pés","planta","plantar","calcanhar","dedo","dedos"},
+    "virilha_dobras": {"virilha","ingle","inguinal","axila","axilas","inframamaria","submamaria","dobras","pregas", "dobra"},
+    "tronco": {"tronco","dorso","costas","peito","torax","tórax","abdomen","barriga","flanco"},
+    "areas_liquen": {"nuca","sacra", "genitais","genital", "membro", "membros", "bacia"},
+    "areas_psoriase": {"couro","cabeludo","cabeça","cabeca","orelha","orelhas","cotovelo","cotovelos","joelho","joelhos","lombar","unha","unhas"},
+    "local_dermatite_seborreica": {"couro","cabeludo","cabeça","cabeca"},
+    "local_dermatite_contato": {"próximas","proximas","próxima","proxima","perto","mesma área","mesma area","mesmo local","mesmo lugar","próximo","proximo"}
+}
+
+# ---------------------------------------------
+# Mapeamentos de múltipla escolha (ramificação)
+# ---------------------------------------------
+OPCOES: Dict[str, Dict[str, Set[str]]] = {
+    "tipo_lesao_inicial": {
+        "A": SINONIMOS["placa"],
+        "B": SINONIMOS["lesao"],
+        "C": SINONIMOS["vesicula"]
+    }
+}
+>>>>>>> Stashed changes
 
 LOC_MICOSIS_ANY = LOC_PES | LOC_UNHAS | LOC_SCALP | LOC_TRONC | LOC_DOBRA
 
+<<<<<<< Updated upstream
 SEX_MASC = {"masculino","masc","homem","m","m.", "homens"}
 SEX_FEM  = {"feminino","fem","mulher","f","f.", "mulheres"}
 
@@ -103,6 +184,10 @@ IDADE_ADULTO = {"adulto","adulta","adultos","adolescentes","adolescente","jovem"
 
 NEGACAO = {"nao","n","nem","sem","ausencia","negativo","negativa","nunca","nenhum","nenhuma", "nada disso"}
 AFIRMACAO = {"sim","s","claro","ok","yes","y","positivo","positiva","bora","comecar","começar"}
+=======
+NEGACAO = {"nao","nem","sem","ausencia","negativo","negativa","nunca","nenhum","nenhuma","nada","naoooo","n"}
+AFIRMACAO = {"sim","s","claro","ok","yes","y","positivo","positiva","bora","vamos","quero","iniciar","começar","comecar"}
+>>>>>>> Stashed changes
 
 def _tem_negacao(texto: str) -> bool:
     return any(t in NEGACAO for t in _tok(texto))
@@ -306,6 +391,7 @@ def _mapear_resposta(caracteristica: str, pergunta_txt: str, entrada_txt: str) -
         if _match(tokens, pistas):
             return "1"
 
+<<<<<<< Updated upstream
     # 3) fallback binário simples por contexto
     if _tem_negacao(entrada_txt):
         return "2"
@@ -316,6 +402,100 @@ def _mapear_resposta(caracteristica: str, pergunta_txt: str, entrada_txt: str) -
     return _normalizacao(entrada_txt)  # sem decisão → pergunta se repete
 
 
+=======
+    # Nós binários
+    pistas = []
+    if caracteristica == "caracteristica_micose":
+        pistas = list(SINONIMOS["circinada"])
+    elif caracteristica == "local_micose":
+        pistas = list(SINONIMOS["pes"] | SINONIMOS["virilha_dobras"] | SINONIMOS["tronco"])
+    elif caracteristica == "tem_prurido_micose":
+        pistas = list(SINONIMOS["prurido"])
+    elif caracteristica == "historico_umidade_micose":
+        pistas = list(SINONIMOS["umidade"] | SINONIMOS["oclusao"])
+    elif caracteristica == "historico_diabetes_micose":
+        pistas = list(SINONIMOS["diabetes"])
+    elif caracteristica == "caracteristica_liquen":
+        pistas = list(SINONIMOS["liquenificada"])
+    elif caracteristica == "local_liquen":
+        pistas = list(SINONIMOS["areas_liquen"])
+    elif caracteristica == "tem_prurido_liquen":
+        pistas = list(SINONIMOS["prurido"])
+    elif caracteristica == "historico_liquen":
+        pistas = list(SINONIMOS["estresse"] | SINONIMOS["atopia"] | SINONIMOS["dermatite"] | SINONIMOS["picada"])
+    elif caracteristica == "caracteristica_psoriase":
+        pistas = list(SINONIMOS["eritemato"] | SINONIMOS["descamativa"] | SINONIMOS["bem_definida"])
+    elif caracteristica == "local_psoriase":
+        pistas = list(SINONIMOS["areas_psoriase"])
+    elif caracteristica == "tem_prurido_psoriase":
+        pistas = list(SINONIMOS["prurido"])
+    elif caracteristica == "historico_psoriase":
+        pistas = list(SINONIMOS["estresse"])
+    elif caracteristica == "caracteristica_pitiriase_rosea":
+        pistas = list(SINONIMOS["eritemato"] | SINONIMOS["descamativa"] | SINONIMOS["erupcao"] | SINONIMOS["placa_mae"])
+    elif caracteristica == "infeccao_viral_pitiriase":
+        pistas = list(SINONIMOS["viral"])
+    elif caracteristica == "local_pitiriase":
+        pistas = list(SINONIMOS["tronco"])
+    elif caracteristica == "tem_prurido_pitiriase":
+        pistas = list(SINONIMOS["prurido"])
+    elif caracteristica == "local_lesao_disseminada":
+        pistas = list(SINONIMOS["local_lesao_disseminada"])
+    elif caracteristica == "caracteristica_lesao_seca":
+        pistas = list(SINONIMOS["caracteristica_lesao_seca"])
+    elif caracteristica == "caracteristica_lesao_alvo":
+        pistas = list(SINONIMOS["caracteristica_lesao_alvo"])
+    elif caracteristica == "tipo_pele_dermatite_oleosa":
+        pistas = list(SINONIMOS["pele_oleosa"])
+    elif caracteristica == "tipo_pele_dermatite_seca":
+        pistas = list(SINONIMOS["pele_seca"])
+    elif caracteristica == "historico_dermatite_seborreica":
+        pistas = list(SINONIMOS["historico_dermatite_seborreica"])
+    elif caracteristica == "local_dermatite_seborreica":
+        pistas = list(SINONIMOS["local_dermatite_seborreica"])
+    elif caracteristica == "historico_dermatite_contato":
+        pistas = list(SINONIMOS["historico_dermatite_contato"])
+    elif caracteristica == "local_dermatite_contato":
+        pistas = list(SINONIMOS["local_dermatite_contato"])
+    elif caracteristica == "historico_dermatite_atopica":
+        pistas = list(SINONIMOS["historico_dermatite_atopica"])
+    elif caracteristica == "sintoma_dermatite_contato":
+        pistas = list(SINONIMOS["sintoma_dermatite_contato"])
+    elif caracteristica == "lesoes_vesiculares_disseminadas":
+        pistas = list(SINONIMOS["vesicula_disseminada"])
+    elif caracteristica == "sintomas_sistemicos_varicela":
+        pistas = list(SINONIMOS["sintomas_sistemicos"])
+    elif caracteristica == "prurido_local":
+        pistas = list(SINONIMOS["prurido"] | SINONIMOS.get("ardor", set()))
+    elif caracteristica == "eh_crianca":
+        pistas = list(SINONIMOS["crianca"])
+    elif caracteristica == "eh_adulto":
+        pistas = list(SINONIMOS["adulto"])
+    elif caracteristica == "manchas_avermelhadas_disseminadas":
+        pistas = list(SINONIMOS["exantema_disseminado"])
+    elif caracteristica == "local_genitais":
+        pistas = list(SINONIMOS["genitais"])
+    elif caracteristica == "local_boca":
+        pistas = list(SINONIMOS["boca"])
+    elif caracteristica == "historico_catapora_ou_imunossup":
+        pistas = list(SINONIMOS["catapora_ou_imunossup"])
+
+    # Decisão: negação → "2"; presença de pistas → "1"
+    if _tem_negacao(entrada_txt):
+        return "2"
+    if _correspondencia(tokens, pistas):
+        return "1"
+
+    if _tem_afirmacao(entrada_txt):
+        return "1"
+    # if _mesmo_topico(pergunta_txt, entrada_txt):
+        #return "1"
+    return _normalizacao(entrada_txt)
+
+# -------------------------
+# API
+# -------------------------
+>>>>>>> Stashed changes
 def registrar_resposta(sessao: Dict[str, Any], valor_digitado: str):
     if not sessao.get("pergunta_atual"): return
     caract = sessao["pergunta_atual"]
@@ -346,8 +526,15 @@ def proxima_etapa(no: Dict[str, Any], respostas: Dict[str, str]) -> Dict[str, An
     valor = respostas.get(caract)
     prox = no.get("ramos", {}).get(valor)
     if not prox:
+<<<<<<< Updated upstream
         return {"perguntar": {"caracteristica": caract, "texto": no["pergunta"]}}
+=======
+        mensagem_erro = "Desculpe, mas não entendi sua resposta. Poderia reformular?"
+        texto_refazer = f"{mensagem_erro}\n\n{no['pergunta']}"
+        return {"perguntar": {"caracteristica": caract, "texto": texto_refazer}}
+>>>>>>> Stashed changes
     return proxima_etapa(prox, respostas)
+
 
 def reiniciar_sessao() -> Dict[str, Any]:
     return {"etapa": "arvore", "respostas": {}, "pergunta_atual": None, "texto_pergunta_atual": None}
