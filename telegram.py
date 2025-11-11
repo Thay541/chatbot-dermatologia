@@ -2,7 +2,7 @@ import os
 import httpx
 from pydantic import BaseModel
 from typing import Optional
-
+import requests 
 
 
 class Chat(BaseModel):
@@ -75,14 +75,14 @@ class TelegramSender:
             self.client.close()
             
             
-import requests 
+## TODO converter esta função para um metodo da classe principal. 
         
 def Telegram_voicepath(file_id: str):
 
   TELEGRAM_API_URL = "https://api.telegram.org/bot{token}/"
   TELEGRAM_FILE_URL = "https://api.telegram.org/file/bot{token}/{file_path}"
 
-  TELEGRAM_TOKEN = '8126274393:AAH6N0pu8xd5lMFU2De5cPD7nXJQGrPffYk'
+  TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
  
 
   base_url = TELEGRAM_API_URL.format(token=TELEGRAM_TOKEN)
